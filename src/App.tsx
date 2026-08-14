@@ -1,134 +1,154 @@
-import { useEffect, useState } from "react";
+import {
+  useState,
+} from "react";
 
 import {
-  collection,
   doc,
-  getDocs,
-  orderBy,
-  query,
-  updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 
 import { db } from "./firebase";
-import PostCard from "./components/PostCard";
-import type { Post } from "./types";
+
+import Navbar from "./components/Navbar";
+import ReadyPage from "./pages/ReadyPage";
+import PostedPage from "./pages/PostedPage";
 
 import "./App.css";
 
+type Page =
+  | "ready"
+  | "posted";
+
 export default function App() {
-  const [posts, setPosts] =
-    useState<Post[]>([]);
+  const [page, setPage] =
+    useState<Page>("ready");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    postedIds,
+    setPostedIds,
+  ] = useState<string[]>([]);
 
-  useEffect(() => {
-    loadPosts();
-  }, []);
+  const [
+    selectedIds,
+    setSelectedIds,
+  ] = useState<string[]>([]);
 
-  async function loadPosts() {
-    try {
-      const postsQuery = query(
-        collection(db, "posts"),
-        orderBy("createdAt", "desc")
+  function handleSelectAll() {
+    if (
+      selectedIds.length ===
+      postedIds.length
+    ) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(
+        postedIds
       );
-
-      const snapshot =
-        await getDocs(postsQuery);
-
-      const data = snapshot.docs.map(
-        (doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })
-      ) as Post[];
-
-      setPosts(data);
-    } catch (error) {
-      console.error(
-        "게시물 불러오기 실패:",
-        error
-      );
-    } finally {
-      setLoading(false);
     }
   }
 
-  async function handleStatusChange(
-    id: string,
-    status: Post["status"]
-  ) {
+  async function handleDeleteSelected() {
+    if (
+      selectedIds.length === 0
+    ) {
+      return;
+    }
+
+    const confirmed =
+      window.confirm(
+        `선택한 ${selectedIds.length}개의 콘텐츠를 삭제하시겠습니까?`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
     try {
-      await updateDoc(
-        doc(db, "posts", id),
-        {
-          status,
+      const batch =
+        writeBatch(db);
+
+      selectedIds.forEach(
+        (id) => {
+          batch.delete(
+            doc(
+              db,
+              "posts",
+              id
+            )
+          );
         }
       );
 
-      setPosts((prev) =>
-        prev.map((post) =>
-          post.id === id
-            ? {
-                ...post,
-                status,
-              }
-            : post
+      await batch.commit();
+
+      setPostedIds((prev) =>
+        prev.filter(
+          (id) =>
+            !selectedIds.includes(
+              id
+            )
         )
       );
+
+      setSelectedIds([]);
     } catch (error) {
       console.error(
-        "상태 변경 실패:",
+        "일괄 삭제 실패:",
         error
       );
 
-      alert("상태 변경에 실패했습니다.");
+      alert(
+        "삭제에 실패했습니다."
+      );
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="loading">
-        불러오는 중...
-      </div>
-    );
   }
 
   return (
     <div className="app">
       <header className="header">
-        <h1>컨텐츠 목록</h1>
+        <h1>
+          컨텐츠 목록
+        </h1>
 
-        <p>
-          전체 {posts.length}개 ·
-          업로드 대기{" "}
-          {
-            posts.filter(
-              (post) =>
-                post.status === "ready"
-            ).length
-          }{" "}
-          · 업로드 완료{" "}
-          {
-            posts.filter(
-              (post) =>
-                post.status === "posted"
-            ).length
+        <Navbar
+          currentPage={page}
+          onPageChange={
+            setPage
           }
-        </p>
+
+          postedIds={
+            postedIds
+          }
+          selectedIds={
+            selectedIds
+          }
+
+          onSelectAll={
+            handleSelectAll
+          }
+
+          onDeleteSelected={
+            handleDeleteSelected
+          }
+        />
       </header>
 
-      <main className="feed">
-        {posts.map((post) => (
-          <PostCard
-            key={post.id}
-            post={post}
-            onStatusChange={
-              handleStatusChange
-            }
-          />
-        ))}
-      </main>
+      {page === "ready" && (
+        <ReadyPage />
+      )}
+
+      {page === "posted" && (
+        <PostedPage
+          selectedIds={
+            selectedIds
+          }
+          setSelectedIds={
+            setSelectedIds
+          }
+          setPostedIds={
+            setPostedIds
+          }
+        />
+      )}
     </div>
   );
 }
