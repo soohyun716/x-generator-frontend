@@ -65,10 +65,10 @@ export default function PostedPage({
       const allPosts: Post[] =
         snapshot.docs.map(
           (document) =>
-            ({
-              id: document.id,
-              ...document.data(),
-            } as Post)
+          ({
+            id: document.id,
+            ...document.data(),
+          } as Post)
         );
 
       const postedPosts =
@@ -102,18 +102,10 @@ export default function PostedPage({
   ) {
     setSelectedIds(
       (prev) =>
-        prev.includes(id)
-          ? prev.filter(
-              (
-                selectedId
-              ) =>
-                selectedId !==
-                id
-            )
-          : [
-              ...prev,
-              id,
-            ]
+        prev.includes(id) ? prev.filter(
+            (selectedId) => selectedId !== id
+          )
+          : [...prev, id,]
     );
   }
 
@@ -142,9 +134,7 @@ export default function PostedPage({
                   post.id
                 )
               }
-              onSelect={
-                handleSelect
-              }
+              onSelect={handleSelect}
             />
           )
         )

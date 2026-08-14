@@ -1,6 +1,4 @@
-import {
-  useState,
-} from "react";
+import {useState} from "react";
 
 import {
   doc,
@@ -68,13 +66,7 @@ export default function App() {
 
       selectedIds.forEach(
         (id) => {
-          batch.delete(
-            doc(
-              db,
-              "posts",
-              id
-            )
-          );
+          batch.delete(doc(db, "posts", id));
         }
       );
 
@@ -111,24 +103,11 @@ export default function App() {
 
         <Navbar
           currentPage={page}
-          onPageChange={
-            setPage
-          }
-
-          postedIds={
-            postedIds
-          }
-          selectedIds={
-            selectedIds
-          }
-
-          onSelectAll={
-            handleSelectAll
-          }
-
-          onDeleteSelected={
-            handleDeleteSelected
-          }
+          onPageChange={setPage}
+          postedIds={postedIds}
+          selectedIds={selectedIds}
+          onSelectAll={handleSelectAll}
+          onDeleteSelected={handleDeleteSelected}
         />
       </header>
 
@@ -138,15 +117,9 @@ export default function App() {
 
       {page === "posted" && (
         <PostedPage
-          selectedIds={
-            selectedIds
-          }
-          setSelectedIds={
-            setSelectedIds
-          }
-          setPostedIds={
-            setPostedIds
-          }
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          setPostedIds={setPostedIds}
         />
       )}
     </div>
