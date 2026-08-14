@@ -33,28 +33,11 @@ export default function PostedCard({
 
   return (
     <article
-      className={`post-card posted-card ${
-        selected
+      className={`post-card posted-card ${selected
           ? "selected"
           : ""
-      }`}
+        }`}
     >
-      <div className="post-select">
-        <label>
-          <input
-            type="checkbox"
-            checked={selected}
-            onChange={() =>
-              onSelect(post.id)
-            }
-          />
-
-          <span>
-            선택
-          </span>
-        </label>
-      </div>
-
       <div className="post-info">
         <div className="text-section">
           <div className="section-header">
@@ -107,6 +90,22 @@ export default function PostedCard({
             {post.threadText}
           </p>
         </div>
+        <div className="post-select">
+          <label>
+            <input
+              type="checkbox"
+              checked={selected}
+              onChange={() =>
+                onSelect(post.id)
+              }
+            />
+
+            <span>
+              선택
+            </span>
+          </label>
+        </div>
+
       </div>
     </article>
   );
