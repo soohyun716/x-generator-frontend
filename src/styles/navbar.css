@@ -1,0 +1,255 @@
+
+.navbar {
+  display: flex;
+  gap: 8px;
+
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  /* border-bottom: 1px solid #e5e7eb; */
+}
+
+.nav-tabs{
+  display: flex;
+}
+
+.nav-button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 14px 18px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: #9ca3af;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.nav-button:hover {
+  color: #4b5563;
+}
+
+.nav-button.active {
+  color: #111827;
+}
+
+.nav-button.active::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+
+  height: 2px;
+
+  background: #111827;
+  border-radius: 2px 2px 0 0;
+}
+
+.nav-button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 22px;
+  height: 22px;
+
+  padding: 0 7px;
+
+  border-radius: 999px;
+  background: #f3f4f6;
+
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.nav-button.active span {
+  background: #111827;
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .nav-button {
+    flex: 1;
+    justify-content: center;
+
+    padding: 13px 8px;
+
+    font-size: 14px;
+  }
+}
+
+/* =========================
+   업로드 완료 페이지 액션
+========================= */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-left: auto;
+}
+
+
+/* 전체 선택 */
+.nav-select-all {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-select-all:hover {
+  color: #111827;
+}
+
+.nav-select-all input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: #111827;
+
+  cursor: pointer;
+}
+
+
+/* 선택 삭제 */
+.nav-delete-button {
+  padding: 8px 0px;
+
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #dc2626;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+width: 100px;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-delete-button:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #ff0000;
+}
+
+.nav-delete-button:disabled {
+  border-color: #e5e7eb;
+
+  background: #f9fafb;
+  color: #d1d5db;
+
+  cursor: default;
+}
+
+.post-select {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.post-select label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 10px 16px 0;
+
+  background: white;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.post-select label:hover {
+  color: #111827;
+}
+
+.post-select input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: #111827;
+
+  cursor: pointer;
+}
+/* 모바일 */
+@media (max-width: 640px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+   .nav-tabs {
+    display: flex;
+    width: 100%;
+  }
+
+  .nav-button {
+    flex: 1;
+    width: 50%;
+    justify-content: center;
+  }
+  .nav-actions {
+    width: 100%;
+
+    justify-content: flex-end;
+
+    padding: 6px 0 10px;
+  }
+
+  .nav-select-all {
+    font-size: 12px;
+  }
+
+  .nav-delete-button {
+    padding: 7px 11px;
+
+    font-size: 12px;
+  }
+}
