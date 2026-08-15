@@ -24,7 +24,7 @@ X-Generator는 이러한 문제를 해결하기 위해 **콘텐츠 생성 → �
 
 ---
 
-## ✨ 주요 기능
+## 주요 기능
 
 - AI 기반 바이럴 콘텐츠 생성
 - AI 이미지 생성
@@ -59,34 +59,6 @@ X-Generator는 이러한 문제를 해결하기 위해 **콘텐츠 생성 → �
                      ▼
          React 관리 페이지
 ```
-
----
-
-## 기술 스택
-
-### Frontend
-
-- React
-- TypeScript
-- Vite
-
-### Backend
-
-- Node.js
-- Express
-
-### AI
-
-- Anthropic Claude
-- OpenAI Image API
-
-### Database
-
-- Firebase Firestore
-
-### Image Processing
-
-- Sharp
 
 ---
 
