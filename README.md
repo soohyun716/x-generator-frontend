@@ -1,32 +1,119 @@
-# React + TypeScript + Vite
+# X-Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> 생성형 AI를 활용하여 바이럴 SNS 콘텐츠를 자동으로 생성하고, 검수 및 게시까지 하나의 워크플로우로 관리하는 AI 콘텐츠 생성 플랫폼
 
-Currently, two official plugins are available:
+## 📌 프로젝트 소개
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+X-Generator는 생성형 AI를 활용하여 바이럴 SNS 콘텐츠를 자동으로 생성하는 서비스입니다.
 
-## React Compiler
+기존에는 콘텐츠 기획, 텍스트 작성, 이미지 제작, 게시 준비가 각각 별도의 작업으로 이루어졌지만, 본 프로젝트는 이러한 과정을 하나의 파이프라인으로 통합하여 콘텐츠 제작 과정을 자동화하는 것을 목표로 개발했습니다.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+사용자는 생성된 콘텐츠를 웹에서 검수한 후 게시 상태를 관리할 수 있으며, AI가 생성한 결과물을 실제 운영 가능한 형태로 관리할 수 있도록 설계했습니다.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🎯 프로젝트 목적
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+생성형 AI는 빠르게 콘텐츠를 생성할 수 있지만, 실제 운영 환경에서는 다음과 같은 문제가 존재합니다.
+
+- 콘텐츠 생성과 이미지 제작이 분리되어 있음
+- 생성 결과를 관리하거나 검수하기 어려움
+- 게시 가능한 형태로 가공하는 과정이 반복적으로 필요함
+
+X-Generator는 이러한 문제를 해결하기 위해 **콘텐츠 생성 → 이미지 생성 → 이미지 합성 → 검수 → 게시 관리**까지 하나의 워크플로우에서 수행할 수 있도록 구현했습니다.
+
+---
+
+## ✨ 주요 기능
+
+- AI 기반 바이럴 콘텐츠 생성
+- AI 이미지 생성
+- 텍스트와 이미지 자동 합성
+- 콘텐츠 검수 및 삭제 기능
+- 업로드 대기 / 업로드 완료 상태 관리
+- Firebase 기반 콘텐츠 관리
+- 반응형 웹 기반 관리 페이지
+
+---
+
+## 🏗 시스템 구조
+
+```text
+                Claude API
+                     │
+                     ▼
+            콘텐츠 생성 (Story)
+                     │
+                     ▼
+          OpenAI Image API
+                     │
+                     ▼
+              이미지 생성
+                     │
+                     ▼
+          Sharp 이미지 합성
+                     │
+                     ▼
+          Firebase Firestore
+                     │
+                     ▼
+         React 관리 페이지
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 🛠 기술 스택
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+
+### Backend
+
+- Node.js
+- Express
+
+### AI
+
+- Anthropic Claude
+- OpenAI Image API
+
+### Database
+
+- Firebase Firestore
+
+### Image Processing
+
+- Sharp
+
+---
+
+## 💡 개발 과정
+
+생성형 AI는 동일한 요청에도 결과물의 품질 편차가 크기 때문에 단순 API 호출만으로는 실제 운영 가능한 콘텐츠를 만들기 어려웠습니다.
+
+이를 해결하기 위해 프롬프트를 지속적으로 개선하며 자연스러운 인터넷 말투와 반전 구조를 유도했고, 생성된 결과를 이미지와 자동으로 합성하여 사람이 바로 검수할 수 있는 형태로 제공하도록 구현했습니다.
+
+또한 Firebase를 활용하여 생성된 콘텐츠를 관리하고, 업로드 상태를 구분하여 실제 운영 환경에서도 사용할 수 있는 콘텐츠 관리 시스템을 구축했습니다.
+
+---
+
+## 🤔 기술적 고민
+
+- AI 생성 품질 향상을 위한 프롬프트 설계
+- 이미지 생성과 텍스트 합성 자동화
+- 콘텐츠 생성부터 게시까지 이어지는 워크플로우 설계
+- 콘텐츠 관리 UI 및 상태 관리 구조 설계
+- 실제 운영을 고려한 데이터 관리 방식 구현
+
+---
+
+## 🚀 향후 개선 사항
+
+- AI 기반 콘텐츠 품질 자동 평가
+- 게시 일정 예약 기능
+- 다양한 SNS 플랫폼 연동
+- AI Agent 기반 자동 게시 시스템
+- 생성 결과 분석 및 통계 기능
