@@ -64,6 +64,7 @@ export default function PostedCard({
           className="post-image"
           src={post.imageUrl}
           alt={post.title}
+          loading="lazy"
         />
 
         <div className="divider" />

@@ -61,6 +61,7 @@ export default function ReadyCard({
           className="post-image"
           src={post.imageUrl}
           alt={post.title}
+          loading="lazy"
         />
 
         <div className="divider" />
