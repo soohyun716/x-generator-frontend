@@ -1,5 +1,5 @@
 const API_URL =
-  "http://211.188.62.164:3000";
+  "https://rebecca-quebec-supplies-benjamin.trycloudflare.com";
 
 export interface GenerateStatus {
   isGenerating: boolean;
