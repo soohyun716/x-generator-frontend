@@ -21,7 +21,13 @@ import type { Post } from "../types";
 
 import "../styles/card.css";
 
-export default function ReadyPage() {
+interface ReadyPageProps {
+  refreshKey: number;
+}
+
+export default function ReadyPage({
+  refreshKey,
+}: ReadyPageProps) {
   const [posts, setPosts] =
     useState<Post[]>([]);
 
@@ -30,7 +36,7 @@ export default function ReadyPage() {
 
   useEffect(() => {
     loadPosts();
-  }, []);
+  }, [refreshKey]);
 
   async function loadPosts() {
     try {
@@ -66,7 +72,7 @@ export default function ReadyPage() {
       setLoading(false);
     }
   }
-  
+
   async function handleUpload(
     id: string
   ) {
@@ -78,7 +84,6 @@ export default function ReadyPage() {
         }
       );
 
-      // ready 페이지에서는 바로 제거
       setPosts((prev) =>
         prev.filter(
           (post) =>

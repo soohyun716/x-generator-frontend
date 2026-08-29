@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 import {
   doc,
@@ -31,6 +31,11 @@ export default function App() {
     setSelectedIds,
   ] = useState<string[]>([]);
 
+  const [
+    readyRefreshKey,
+    setReadyRefreshKey,
+  ] = useState(0);
+
   function handleSelectAll() {
     if (
       selectedIds.length ===
@@ -53,7 +58,7 @@ export default function App() {
 
     const confirmed =
       window.confirm(
-        `선택한 ${selectedIds.length}개의 콘텐츠를 삭제하시겠습니까?`
+        `선택한 ${selectedIds.length}개의 컨텐츠를 삭제하시겠습니까?`
       );
 
     if (!confirmed) {
@@ -66,19 +71,26 @@ export default function App() {
 
       selectedIds.forEach(
         (id) => {
-          batch.delete(doc(db, "posts", id));
+          batch.delete(
+            doc(
+              db,
+              "posts",
+              id
+            )
+          );
         }
       );
 
       await batch.commit();
 
-      setPostedIds((prev) =>
-        prev.filter(
-          (id) =>
-            !selectedIds.includes(
-              id
-            )
-        )
+      setPostedIds(
+        (prev) =>
+          prev.filter(
+            (id) =>
+              !selectedIds.includes(
+                id
+              )
+          )
       );
 
       setSelectedIds([]);
@@ -94,6 +106,12 @@ export default function App() {
     }
   }
 
+  function handleGenerated() {
+    setReadyRefreshKey(
+      (prev) => prev + 1
+    );
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -103,23 +121,46 @@ export default function App() {
 
         <Navbar
           currentPage={page}
-          onPageChange={setPage}
-          postedIds={postedIds}
-          selectedIds={selectedIds}
-          onSelectAll={handleSelectAll}
-          onDeleteSelected={handleDeleteSelected}
+          onPageChange={
+            setPage
+          }
+          postedIds={
+            postedIds
+          }
+          selectedIds={
+            selectedIds
+          }
+          onSelectAll={
+            handleSelectAll
+          }
+          onDeleteSelected={
+            handleDeleteSelected
+          }
+          onGenerated={
+            handleGenerated
+          }
         />
       </header>
 
       {page === "ready" && (
-        <ReadyPage />
+        <ReadyPage
+          refreshKey={
+            readyRefreshKey
+          }
+        />
       )}
 
       {page === "posted" && (
         <PostedPage
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-          setPostedIds={setPostedIds}
+          selectedIds={
+            selectedIds
+          }
+          setSelectedIds={
+            setSelectedIds
+          }
+          setPostedIds={
+            setPostedIds
+          }
         />
       )}
     </div>

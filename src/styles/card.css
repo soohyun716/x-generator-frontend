@@ -143,7 +143,9 @@
 }
 
 .delete-button:hover {
-  background: #fafafa;
+  background: #ff0000;
+  border-color: #ff0000;
+  color: white;
 }
 
 /* 상태 */
@@ -180,7 +182,7 @@
 }
 
 .upload-button:hover {
-  background: #333;
+  background: #828282;
 }
 
 /* 업로드 완료 상태 */
@@ -212,8 +214,4 @@
   .post-card {
     border-bottom-width: 8px;
   }
-}
-
-.posted-page {
-  width: 100%;
 }

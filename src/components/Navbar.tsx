@@ -10,6 +10,11 @@ import {
 
 import { db } from "../firebase";
 
+import {
+  generateContents,
+  getGenerateStatus,
+} from "./GenerateControl";
+
 import "../styles/navbar.css";
 
 type Page = "ready" | "posted";
@@ -26,33 +31,76 @@ interface NavbarProps {
 
   onSelectAll: () => void;
   onDeleteSelected: () => void;
+
+  onGenerated: () => void;
 }
 
 export default function Navbar({
   currentPage,
   onPageChange,
-
   postedIds,
   selectedIds,
-
   onSelectAll,
   onDeleteSelected,
+  onGenerated,
 }: NavbarProps) {
-  const [readyCount, setReadyCount] =
-    useState(0);
+  const [
+    readyCount,
+    setReadyCount,
+  ] = useState(0);
 
-  const [postedCount, setPostedCount] =
-    useState(0);
+  const [
+    postedCount,
+    setPostedCount,
+  ] = useState(0);
+
+  const [
+    generateCount,
+    setGenerateCount,
+  ] = useState(5);
+
+  const [
+    isGenerating,
+    setIsGenerating,
+  ] = useState(false);
+
+  const [
+    generateMessage,
+    setGenerateMessage,
+  ] = useState("");
 
   useEffect(() => {
     loadCounts();
   }, [currentPage]);
 
+  useEffect(() => {
+    checkGenerateStatus();
+  }, []);
+
+  useEffect(() => {
+    if (!isGenerating) {
+      return;
+    }
+
+    const interval = setInterval(
+      checkGenerateStatus,
+      2000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isGenerating]);
+
   async function loadCounts() {
     try {
-      const snapshot = await getDocs(
-        collection(db, "posts")
-      );
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "posts"
+          )
+        );
 
       let ready = 0;
       let posted = 0;
@@ -63,13 +111,15 @@ export default function Navbar({
             document.data();
 
           if (
-            data.status === "ready"
+            data.status ===
+            "ready"
           ) {
             ready++;
           }
 
           if (
-            data.status === "posted"
+            data.status ===
+            "posted"
           ) {
             posted++;
           }
@@ -86,6 +136,75 @@ export default function Navbar({
     }
   }
 
+  async function checkGenerateStatus() {
+    try {
+      const status =
+        await getGenerateStatus();
+
+      setIsGenerating(
+        status.isGenerating
+      );
+
+      if (status.isGenerating) {
+        setGenerateMessage(
+          `${status.current} / ${status.total} 컨텐츠 생성 중...`
+        );
+      }
+    } catch (error) {
+      console.error(
+        "생성 상태 조회 실패:",
+        error
+      );
+    }
+  }
+
+  async function handleGenerate() {
+    if (
+      !Number.isInteger(
+        generateCount
+      ) ||
+      generateCount < 1 ||
+      generateCount > 100
+    ) {
+      alert(
+        "생성 개수는 1~100 사이여야 합니다."
+      );
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+
+      setGenerateMessage(
+        `0 / ${generateCount} 컨텐츠 생성 중...`
+      );
+
+      const data =
+        await generateContents(
+          generateCount
+        );
+
+      setGenerateMessage(
+        `${data.result.successCount}개 컨텐츠 생성 완료`
+      );
+
+      await loadCounts();
+
+      onGenerated();
+    } catch (error) {
+      console.error(
+        "컨텐츠 생성 실패:",
+        error
+      );
+
+      setGenerateMessage(
+        "컨텐츠 생성에 실패했습니다."
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
   const allSelected =
     postedIds.length > 0 &&
     selectedIds.length ===
@@ -96,12 +215,15 @@ export default function Navbar({
       <div className="nav-tabs">
         <button
           className={
-            currentPage === "ready"
+            currentPage ===
+              "ready"
               ? "nav-button active"
               : "nav-button"
           }
           onClick={() =>
-            onPageChange("ready")
+            onPageChange(
+              "ready"
+            )
           }
         >
           업로드 대기
@@ -113,12 +235,15 @@ export default function Navbar({
 
         <button
           className={
-            currentPage === "posted"
+            currentPage ===
+              "posted"
               ? "nav-button active"
               : "nav-button"
           }
           onClick={() =>
-            onPageChange("posted")
+            onPageChange(
+              "posted"
+            )
           }
         >
           업로드 완료
@@ -129,31 +254,86 @@ export default function Navbar({
         </button>
       </div>
 
-      {currentPage === "posted" && (
-        <div className="nav-actions">
-          <label className="nav-select-all">
+      {currentPage ===
+        "ready" && (
+          <div className="nav-actions">
+            {generateMessage && (
+              <span className="nav-generate-message">
+                {
+                  generateMessage
+                }
+              </span>
+            )}
             <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={onSelectAll}
+              className="nav-generate-input"
+              type="number"
+              min="1"
+              max="100"
+              value={
+                generateCount
+              }
+              disabled={
+                isGenerating
+              }
+              onChange={(e) =>
+                setGenerateCount(
+                  Number(
+                    e.target.value
+                  )
+                )
+              }
             />
 
-            전체 선택
-          </label>
+            <button
+              className="nav-generate-button"
+              onClick={
+                handleGenerate
+              }
+              disabled={
+                isGenerating
+              }
+            >
+              {isGenerating
+                ? "생성 중..."
+                : "컨텐츠 생성"}
+            </button>
+          </div>
+        )}
 
-          <button
-            className="nav-delete-button"
-            onClick={onDeleteSelected}
-            disabled={
-              selectedIds.length === 0
-            }
-          >
-            선택 삭제
-            {selectedIds.length > 0 &&
-              ` (${selectedIds.length})`}
-          </button>
-        </div>
-      )}
+      {currentPage ===
+        "posted" && (
+          <div className="nav-actions">
+            <label className="nav-select-all">
+              <input
+                type="checkbox"
+                checked={
+                  allSelected
+                }
+                onChange={
+                  onSelectAll
+                }
+              />
+
+              전체 선택
+            </label>
+
+            <button
+              className="nav-delete-button"
+              onClick={
+                onDeleteSelected
+              }
+              disabled={
+                selectedIds.length ===
+                0
+              }
+            >
+              선택 삭제
+              {selectedIds.length >
+                0 &&
+                ` (${selectedIds.length})`}
+            </button>
+          </div>
+        )}
     </nav>
   );
 }
