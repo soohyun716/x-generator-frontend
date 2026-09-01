@@ -1,5 +1,5 @@
 const API_URL =
-  "https://extraction-oldest-baseline-designing.trycloudflare.com";
+  "https://heading-festivals-winners-phi.trycloudflare.com";
 
 export interface GenerateStatus {
   isGenerating: boolean;
