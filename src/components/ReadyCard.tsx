@@ -32,88 +32,122 @@ export default function ReadyCard({
       );
     }
   };
+  const API_URL =
+    "https://emphasis-expected-repairs-plenty.trycloudflare.com";
 
-  const copyImage = async (
-    imageUrl: string
+
+  // const copyImage = async (
+  //   imageUrl: string
+  // ) => {
+  //   try {
+  //     const API_URL =
+  //       "https://emphasis-expected-repairs-plenty.trycloudflare.com";
+
+  //     const response = await fetch(
+  //       `${API_URL}/api/image-proxy?url=${encodeURIComponent(
+  //         imageUrl
+  //       )}`
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         `이미지 가져오기 실패: ${response.status}`
+  //       );
+  //     }
+
+  //     const blob = await response.blob();
+
+  //     const bitmap =
+  //       await createImageBitmap(blob);
+
+  //     const canvas =
+  //       document.createElement("canvas");
+
+  //     canvas.width = bitmap.width;
+  //     canvas.height = bitmap.height;
+
+  //     const ctx =
+  //       canvas.getContext("2d");
+
+  //     if (!ctx) {
+  //       throw new Error(
+  //         "Canvas 생성 실패"
+  //       );
+  //     }
+
+  //     ctx.drawImage(
+  //       bitmap,
+  //       0,
+  //       0
+  //     );
+
+  //     const pngBlob =
+  //       await new Promise<Blob>(
+  //         (resolve, reject) => {
+  //           canvas.toBlob(
+  //             (blob) => {
+  //               if (blob) {
+  //                 resolve(blob);
+  //               } else {
+  //                 reject(
+  //                   new Error(
+  //                     "PNG 변환 실패"
+  //                   )
+  //                 );
+  //               }
+  //             },
+  //             "image/png"
+  //           );
+  //         }
+  //       );
+
+  //     await navigator.clipboard.write([
+  //       new ClipboardItem({
+  //         "image/png": pngBlob,
+  //       }),
+  //     ]);
+
+  //     alert("이미지가 복사되었습니다!");
+  //   } catch (error) {
+  //     console.error(
+  //       "이미지 복사 실패:",
+  //       error
+  //     );
+
+  //     alert(
+  //       "이미지 복사에 실패했습니다."
+  //     );
+  //   }
+  // };
+
+  const downloadImage = async (
+    imageUrl: string,
+    title: string
   ) => {
     try {
-      const API_URL =
-        "https://emphasis-expected-repairs-plenty.trycloudflare.com";
-
       const response = await fetch(
-        `${API_URL}/api/image-proxy?url=${encodeURIComponent(
-          imageUrl
-        )}`
+        `${API_URL}/api/image-proxy?url=${encodeURIComponent(imageUrl)}`
       );
 
       if (!response.ok) {
-        throw new Error(
-          `이미지 가져오기 실패: ${response.status}`
-        );
+        throw new Error("이미지를 불러오지 못했습니다.");
       }
 
       const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
 
-      const bitmap =
-        await createImageBitmap(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${title}.png`;
 
-      const canvas =
-        document.createElement("canvas");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-      canvas.width = bitmap.width;
-      canvas.height = bitmap.height;
-
-      const ctx =
-        canvas.getContext("2d");
-
-      if (!ctx) {
-        throw new Error(
-          "Canvas 생성 실패"
-        );
-      }
-
-      ctx.drawImage(
-        bitmap,
-        0,
-        0
-      );
-
-      const pngBlob =
-        await new Promise<Blob>(
-          (resolve, reject) => {
-            canvas.toBlob(
-              (blob) => {
-                if (blob) {
-                  resolve(blob);
-                } else {
-                  reject(
-                    new Error(
-                      "PNG 변환 실패"
-                    )
-                  );
-                }
-              },
-              "image/png"
-            );
-          }
-        );
-
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "image/png": pngBlob,
-        }),
-      ]);
-
-      alert("이미지가 복사되었습니다!");
+      URL.revokeObjectURL(url);
     } catch (error) {
-      console.error(
-        "이미지 복사 실패:",
-        error
-      );
-
-      alert(
-        "이미지 복사에 실패했습니다."
-      );
+      console.error("이미지 저장 실패:", error);
+      alert("이미지 저장에 실패했습니다.");
     }
   };
 
@@ -149,9 +183,9 @@ export default function ReadyCard({
 
             <button
               className="copy-image-button"
-              onClick={() => copyImage(post.imageUrl)}
+              onClick={() => downloadImage(post.imageUrl, post.title)}
             >
-              이미지 복사
+              이미지 저장
             </button>
           </div>
 
