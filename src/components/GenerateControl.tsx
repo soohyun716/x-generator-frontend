@@ -1,5 +1,5 @@
 const API_URL =
-  "https://heading-festivals-winners-phi.trycloudflare.com";
+  "https://curious-casinos-cheap-verification.trycloudflare.com";
 
 export interface GenerateStatus {
   isGenerating: boolean;
