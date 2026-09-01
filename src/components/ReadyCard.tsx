@@ -38,7 +38,7 @@ export default function ReadyCard({
   ) => {
     try {
       const API_URL =
-        "https://curious-casinos-cheap-verification.trycloudflare.com";
+        "https://emphasis-expected-repairs-plenty.trycloudflare.com";
 
       const response = await fetch(
         `${API_URL}/api/image-proxy?url=${encodeURIComponent(
