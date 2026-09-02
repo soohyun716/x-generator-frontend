@@ -1,5 +1,5 @@
 const API_URL =
-  "https://emphasis-expected-repairs-plenty.trycloudflare.com";
+  "https://says-surely-acute-issued.trycloudflare.com";
 
 export interface GenerateStatus {
   isGenerating: boolean;
