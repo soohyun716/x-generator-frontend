@@ -34,7 +34,7 @@ export default function ReadyCard({
   };
   const API_URL =
     "https://says-surely-acute-issued.trycloudflare.com";
-
+    // "http://localhost:3000";
 
   // const copyImage = async (
   //   imageUrl: string

@@ -1,5 +1,6 @@
 const API_URL =
   "https://says-surely-acute-issued.trycloudflare.com";
+// "http://localhost:3000";
 
 export interface GenerateStatus {
   isGenerating: boolean;
