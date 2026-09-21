@@ -9,7 +9,7 @@ import { db } from "./firebase";
 
 import Navbar from "./components/Navbar";
 import ReadyPage from "./pages/ReadyPage";
-import ApprovedPage from "./pages/ApprovedPage";
+// import ApprovedPage from "./pages/ApprovedPage";
 import PostedPage from "./pages/PostedPage";
 
 import "./App.css";
@@ -38,10 +38,10 @@ export default function App() {
     setReadyRefreshKey,
   ] = useState(0);
 
-  const [
-    approvedRefreshKey,
-    setApprovedRefreshKey,
-  ] = useState(0);
+  // const [
+  //   approvedRefreshKey,
+  //   setApprovedRefreshKey,
+  // ] = useState(0);
 
   function handleSelectAll() {
     if (
@@ -157,13 +157,13 @@ export default function App() {
         />
       )}
 
-      {page === "approved" && (
+      {/* {page === "approved" && (
         <ApprovedPage
           refreshKey={
             approvedRefreshKey
           }
         />
-      )}
+      )*/}
 
       {page === "posted" && (
         <PostedPage
