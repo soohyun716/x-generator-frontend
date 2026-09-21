@@ -4,7 +4,7 @@ import "../styles/card.css";
 interface ReadyCardProps {
   post: Post;
 
-  onUpload: (
+  onApprove: (
     id: string
   ) => void;
 
@@ -15,7 +15,7 @@ interface ReadyCardProps {
 
 export default function ReadyCard({
   post,
-  onUpload,
+  onApprove,
   onDelete,
 }: ReadyCardProps) {
   const copyText = async (
@@ -32,93 +32,10 @@ export default function ReadyCard({
       );
     }
   };
+
   const API_URL =
-    "https://says-surely-acute-issued.trycloudflare.com";
-    // "http://localhost:3000";
-
-  // const copyImage = async (
-  //   imageUrl: string
-  // ) => {
-  //   try {
-  //     const API_URL =
-  //       "https://emphasis-expected-repairs-plenty.trycloudflare.com";
-
-  //     const response = await fetch(
-  //       `${API_URL}/api/image-proxy?url=${encodeURIComponent(
-  //         imageUrl
-  //       )}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(
-  //         `이미지 가져오기 실패: ${response.status}`
-  //       );
-  //     }
-
-  //     const blob = await response.blob();
-
-  //     const bitmap =
-  //       await createImageBitmap(blob);
-
-  //     const canvas =
-  //       document.createElement("canvas");
-
-  //     canvas.width = bitmap.width;
-  //     canvas.height = bitmap.height;
-
-  //     const ctx =
-  //       canvas.getContext("2d");
-
-  //     if (!ctx) {
-  //       throw new Error(
-  //         "Canvas 생성 실패"
-  //       );
-  //     }
-
-  //     ctx.drawImage(
-  //       bitmap,
-  //       0,
-  //       0
-  //     );
-
-  //     const pngBlob =
-  //       await new Promise<Blob>(
-  //         (resolve, reject) => {
-  //           canvas.toBlob(
-  //             (blob) => {
-  //               if (blob) {
-  //                 resolve(blob);
-  //               } else {
-  //                 reject(
-  //                   new Error(
-  //                     "PNG 변환 실패"
-  //                   )
-  //                 );
-  //               }
-  //             },
-  //             "image/png"
-  //           );
-  //         }
-  //       );
-
-  //     await navigator.clipboard.write([
-  //       new ClipboardItem({
-  //         "image/png": pngBlob,
-  //       }),
-  //     ]);
-
-  //     alert("이미지가 복사되었습니다!");
-  //   } catch (error) {
-  //     console.error(
-  //       "이미지 복사 실패:",
-  //       error
-  //     );
-
-  //     alert(
-  //       "이미지 복사에 실패했습니다."
-  //     );
-  //   }
-  // };
+    "https://peak-cbs-portal-guru.trycloudflare.com";
+  // "http://localhost:3000";
 
   const downloadImage = async (
     imageUrl: string,
@@ -126,34 +43,53 @@ export default function ReadyCard({
   ) => {
     try {
       const response = await fetch(
-        `${API_URL}/api/image-proxy?url=${encodeURIComponent(imageUrl)}`
+        `${API_URL}/api/image-proxy?url=${encodeURIComponent(
+          imageUrl
+        )}`
       );
 
       if (!response.ok) {
-        throw new Error("이미지를 불러오지 못했습니다.");
+        throw new Error(
+          "이미지를 불러오지 못했습니다."
+        );
       }
 
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
+      const blob =
+        await response.blob();
 
-      const link = document.createElement("a");
+      const url =
+        URL.createObjectURL(blob);
+
+      const link =
+        document.createElement("a");
+
       link.href = url;
       link.download = `${title}.png`;
 
-      document.body.appendChild(link);
+      document.body.appendChild(
+        link
+      );
+
       link.click();
       link.remove();
 
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("이미지 저장 실패:", error);
-      alert("이미지 저장에 실패했습니다.");
+      console.error(
+        "이미지 저장 실패:",
+        error
+      );
+
+      alert(
+        "이미지 저장에 실패했습니다."
+      );
     }
   };
 
   return (
     <article className="post-card">
       <div className="post-info">
+        {/* 제목 */}
         <div className="text-section">
           <div className="section-header">
             <span className="label">
@@ -175,6 +111,7 @@ export default function ReadyCard({
           </p>
         </div>
 
+        {/* 이미지 */}
         <div className="image-section">
           <div className="section-header">
             <span className="label">
@@ -183,7 +120,12 @@ export default function ReadyCard({
 
             <button
               className="copy-image-button"
-              onClick={() => downloadImage(post.imageUrl, post.title)}
+              onClick={() =>
+                downloadImage(
+                  post.imageUrl,
+                  post.title
+                )
+              }
             >
               이미지 저장
             </button>
@@ -199,6 +141,7 @@ export default function ReadyCard({
 
         <div className="divider" />
 
+        {/* 댓글 타래 */}
         <div className="text-section">
           <div className="section-header">
             <span className="label">
@@ -222,14 +165,15 @@ export default function ReadyCard({
           </p>
         </div>
 
+        {/* 액션 버튼 */}
         <div className="actions">
           <button
             className="upload-button"
             onClick={() =>
-              onUpload(post.id)
+              onApprove(post.id)
             }
           >
-            업로드
+            업로드 확정
           </button>
 
           <button

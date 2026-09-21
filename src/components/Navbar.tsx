@@ -17,7 +17,10 @@ import {
 
 import "../styles/navbar.css";
 
-type Page = "ready" | "posted";
+type Page =
+  | "ready"
+  | "approved"
+  | "posted";
 
 interface NavbarProps {
   currentPage: Page;
@@ -47,6 +50,11 @@ export default function Navbar({
   const [
     readyCount,
     setReadyCount,
+  ] = useState(0);
+
+  const [
+    approvedCount,
+    setApprovedCount,
   ] = useState(0);
 
   const [
@@ -103,6 +111,7 @@ export default function Navbar({
         );
 
       let ready = 0;
+      let approved = 0;
       let posted = 0;
 
       snapshot.docs.forEach(
@@ -119,6 +128,13 @@ export default function Navbar({
 
           if (
             data.status ===
+            "approved"
+          ) {
+            approved++;
+          }
+
+          if (
+            data.status ===
             "posted"
           ) {
             posted++;
@@ -127,6 +143,9 @@ export default function Navbar({
       );
 
       setReadyCount(ready);
+      setApprovedCount(
+        approved
+      );
       setPostedCount(posted);
     } catch (error) {
       console.error(
@@ -208,15 +227,17 @@ export default function Navbar({
   const allSelected =
     postedIds.length > 0 &&
     selectedIds.length ===
-    postedIds.length;
+      postedIds.length;
 
   return (
     <nav className="navbar">
       <div className="nav-tabs">
+
+        {/* 업로드 대기 */}
         <button
           className={
             currentPage ===
-              "ready"
+            "ready"
               ? "nav-button active"
               : "nav-button"
           }
@@ -233,10 +254,32 @@ export default function Navbar({
           </span>
         </button>
 
+        {/* 업로드 확정 */}
         <button
           className={
             currentPage ===
-              "posted"
+            "approved"
+              ? "nav-button active"
+              : "nav-button"
+          }
+          onClick={() =>
+            onPageChange(
+              "approved"
+            )
+          }
+        >
+          업로드 확정
+
+          <span className="nav-count">
+            {approvedCount}
+          </span>
+        </button>
+
+        {/* 업로드 완료 */}
+        <button
+          className={
+            currentPage ===
+            "posted"
               ? "nav-button active"
               : "nav-button"
           }
@@ -254,86 +297,90 @@ export default function Navbar({
         </button>
       </div>
 
+      {/* 콘텐츠 생성 */}
       {currentPage ===
         "ready" && (
-          <div className="nav-actions">
-            {generateMessage && (
-              <span className="nav-generate-message">
-                {
-                  generateMessage
-                }
-              </span>
-            )}
-            <input
-              className="nav-generate-input"
-              type="number"
-              min="1"
-              max="100"
-              value={
-                generateCount
+        <div className="nav-actions">
+          {generateMessage && (
+            <span className="nav-generate-message">
+              {
+                generateMessage
               }
-              disabled={
-                isGenerating
-              }
-              onChange={(e) =>
-                setGenerateCount(
-                  Number(
-                    e.target.value
-                  )
+            </span>
+          )}
+
+          <input
+            className="nav-generate-input"
+            type="number"
+            min="1"
+            max="100"
+            value={
+              generateCount
+            }
+            disabled={
+              isGenerating
+            }
+            onChange={(e) =>
+              setGenerateCount(
+                Number(
+                  e.target.value
                 )
+              )
+            }
+          />
+
+          <button
+            className="nav-generate-button"
+            onClick={
+              handleGenerate
+            }
+            disabled={
+              isGenerating
+            }
+          >
+            {isGenerating
+              ? "생성 중..."
+              : "컨텐츠 생성"}
+          </button>
+        </div>
+      )}
+
+      {/* 업로드 완료 관리 */}
+      {currentPage ===
+        "posted" && (
+        <div className="nav-actions">
+          <label className="nav-select-all">
+            <input
+              type="checkbox"
+              checked={
+                allSelected
+              }
+              onChange={
+                onSelectAll
               }
             />
 
-            <button
-              className="nav-generate-button"
-              onClick={
-                handleGenerate
-              }
-              disabled={
-                isGenerating
-              }
-            >
-              {isGenerating
-                ? "생성 중..."
-                : "컨텐츠 생성"}
-            </button>
-          </div>
-        )}
+            전체 선택
+          </label>
 
-      {currentPage ===
-        "posted" && (
-          <div className="nav-actions">
-            <label className="nav-select-all">
-              <input
-                type="checkbox"
-                checked={
-                  allSelected
-                }
-                onChange={
-                  onSelectAll
-                }
-              />
+          <button
+            className="nav-delete-button"
+            onClick={
+              onDeleteSelected
+            }
+            disabled={
+              selectedIds.length ===
+              0
+            }
+          >
+            선택 삭제
 
-              전체 선택
-            </label>
-
-            <button
-              className="nav-delete-button"
-              onClick={
-                onDeleteSelected
-              }
-              disabled={
-                selectedIds.length ===
-                0
-              }
-            >
-              선택 삭제
-              {selectedIds.length >
-                0 &&
-                ` (${selectedIds.length})`}
-            </button>
-          </div>
-        )}
+            {selectedIds.length >
+              0 &&
+              ` (${selectedIds.length})`}
+          </button>
+        </div>
+      )}
     </nav>
   );
 }

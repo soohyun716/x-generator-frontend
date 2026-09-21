@@ -1,5 +1,5 @@
 const API_URL =
-  "https://says-surely-acute-issued.trycloudflare.com";
+  "https://peak-cbs-portal-guru.trycloudflare.com";
 // "http://localhost:3000";
 
 export interface GenerateStatus {

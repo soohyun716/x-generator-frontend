@@ -73,14 +73,14 @@ export default function ReadyPage({
     }
   }
 
-  async function handleUpload(
+  async function handleApprove(
     id: string
   ) {
     try {
       await updateDoc(
         doc(db, "posts", id),
         {
-          status: "posted",
+          status: "approved",
         }
       );
 
@@ -92,16 +92,15 @@ export default function ReadyPage({
       );
     } catch (error) {
       console.error(
-        "상태 변경 실패:",
+        "업로드 확정 실패:",
         error
       );
 
       alert(
-        "업로드 상태 변경에 실패했습니다."
+        "업로드 확정에 실패했습니다."
       );
     }
   }
-
   async function handleDelete(
     id: string
   ) {
@@ -156,14 +155,9 @@ export default function ReadyPage({
           <ReadyCard
             key={post.id}
             post={post}
-            onUpload={
-              handleUpload
-            }
-            onDelete={
-              handleDelete
-            }
-          />
-        ))
+            onApprove={handleApprove}
+            onDelete={handleDelete}
+          />))
       )}
     </main>
   );

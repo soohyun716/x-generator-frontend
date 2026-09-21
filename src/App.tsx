@@ -9,12 +9,14 @@ import { db } from "./firebase";
 
 import Navbar from "./components/Navbar";
 import ReadyPage from "./pages/ReadyPage";
+import ApprovedPage from "./pages/ApprovedPage";
 import PostedPage from "./pages/PostedPage";
 
 import "./App.css";
 
 type Page =
   | "ready"
+  | "approved"
   | "posted";
 
 export default function App() {
@@ -34,6 +36,11 @@ export default function App() {
   const [
     readyRefreshKey,
     setReadyRefreshKey,
+  ] = useState(0);
+
+  const [
+    approvedRefreshKey,
+    setApprovedRefreshKey,
   ] = useState(0);
 
   function handleSelectAll() {
@@ -146,6 +153,14 @@ export default function App() {
         <ReadyPage
           refreshKey={
             readyRefreshKey
+          }
+        />
+      )}
+
+      {page === "approved" && (
+        <ApprovedPage
+          refreshKey={
+            approvedRefreshKey
           }
         />
       )}
