@@ -16,7 +16,7 @@ import "./App.css";
 
 type Page =
   | "ready"
-  | "approved"
+  // | "approved"
   | "posted";
 
 export default function App() {
