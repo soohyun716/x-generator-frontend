@@ -52,10 +52,10 @@ export default function Navbar({
     setReadyCount,
   ] = useState(0);
 
-  const [
-    approvedCount,
-    setApprovedCount,
-  ] = useState(0);
+  // const [
+  //   approvedCount,
+  //   setApprovedCount,
+  // ] = useState(0);
 
   const [
     postedCount,
@@ -143,9 +143,9 @@ export default function Navbar({
       );
 
       setReadyCount(ready);
-      setApprovedCount(
-        approved
-      );
+      // setApprovedCount(
+      //   approved
+      // );
       setPostedCount(posted);
     } catch (error) {
       console.error(

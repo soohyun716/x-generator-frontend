@@ -12,7 +12,7 @@ export interface Post {
 
   status:
   | "ready"
-  | "approved"
+  // | "approved"
   | "posted";
 
   createdAt?: Timestamp;
