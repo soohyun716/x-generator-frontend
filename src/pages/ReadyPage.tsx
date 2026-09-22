@@ -80,7 +80,9 @@ export default function ReadyPage({
       await updateDoc(
         doc(db, "posts", id),
         {
-          status: "approved",
+          // status: "approved",
+          status: "posted",
+
         }
       );
 

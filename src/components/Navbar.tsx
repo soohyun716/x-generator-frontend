@@ -19,7 +19,7 @@ import "../styles/navbar.css";
 
 type Page =
   | "ready"
-  | "approved"
+  // | "approved"
   | "posted";
 
 interface NavbarProps {
@@ -255,7 +255,7 @@ export default function Navbar({
         </button>
 
         {/* 업로드 확정 */}
-        <button
+        {/* <button
           className={
             currentPage ===
             "approved"
@@ -273,7 +273,7 @@ export default function Navbar({
           <span className="nav-count">
             {approvedCount}
           </span>
-        </button>
+        </button> */}
 
         {/* 업로드 완료 */}
         <button
